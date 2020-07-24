@@ -34,9 +34,9 @@ def recommended_channels():
     if request.method == "POST":
         ch_name = request.form["channel_name"]
         ch_id = channel_name2channel_id(ch_name)
-        #ids_of_recommended_channel = personalized_pagerank(ch_id)
+        ids_of_recommended_channel = personalized_pagerank(ch_id)
         infos_of_recommended_channel = []
-        for id in [ch_id]:#ids_of_recommended_channel:
+        for id in ds_of_recommended_channel:
             info_of_recommended_channel = get_recommended_channel(id)
             infos_of_recommended_channel.append(info_of_recommended_channel)
 
@@ -46,7 +46,6 @@ def recommended_channels():
 def channel_name2channel_id(channel_name):
     df = pd.read_csv("database.csv")
     channel_id = df[df["channel_name"]==channel_name]["channel_id"][0]
-    print("do")
     return channel_id
 
 def get_recommended_channel(channel_id):
