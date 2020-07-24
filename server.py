@@ -3,14 +3,6 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 
 app = Flask(__name__)
 
-@app.route('/post', methods=['GET', 'POST'])
-def post():
-    if request.method == 'POST':
-        ch_id = request.form['ch_id']
-        url = f'http://localhost:5000/personalized_pagerank/{ch_id}'
-        response = requests.get(url)
-        return response
-
 @app.route("/personalized_pagerank", methods=["POST"])
 def personalized_pagerank():
     """
