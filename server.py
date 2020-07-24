@@ -44,7 +44,7 @@ def recommended_channels():
         return jsonify(response)
 
 def channel_name2channel_id(channel_name):
-    df = pd.read_csv("database.csv")
+    df = pd.read_csv("data/database.csv")
     channel_id = df[df["channel_name"]==channel_name]["channel_id"][0]
     return channel_id
 
