@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import networkx as nx
 
@@ -13,11 +14,6 @@ def post():
         return response
 
 def personalized_pagerank(ch_id=None):
-    """
-    現段階では本当のページランクではなく、推薦するチャンネルのIDが保存されたjsonを返す。
-    チャンネルIDは以下のようにURLに含まれる
-    youtube.com/user/チャンネルID  (チャンネルのホームページのURL)
-    """
     if ch_id == None:
         return False
     # グラフ作成
@@ -29,6 +25,40 @@ def personalized_pagerank(ch_id=None):
     # ソートしてjsonにエンコード
     ids_of_recommended_channel = dict(sorted(pr.items(), key=lambda x: -x[1])[:5])
     return ids_of_recommended_channel
+
+@app.route("/recommended_channels", methods=["POST"])
+def recommended_channels():
+    """
+    現段階では本当のページランクではなく、推薦するチャンネル情報が書き込まれたjsonを返す。
+    """
+    if request.method == "POST":
+        ch_name = request.form["channel_name"]
+        ch_id = channel_name2channel_id(ch_name)
+        ids_of_recommended_channel = personalized_pagerank(ch_id)
+        infos_of_recommended_channel = []
+        for id in ds_of_recommended_channel:
+            info_of_recommended_channel = get_recommended_channel(id)
+            infos_of_recommended_channel.append(info_of_recommended_channel)
+
+        response = {"ans": infos_of_recommended_channel}
+        return jsonify(response)
+
+def channel_name2channel_id(channel_name):
+    df = pd.read_csv("database.csv")
+    channel_id = df[df["channel_name"]==channel_name]["channel_id"][0]
+    return channel_id
+
+def get_recommended_channel(channel_id):
+    df = pd.read_csv("database.csv")
+    print(channel_id)
+    df_recommended_channel = df[df["channel_id"]==channel_id]
+    recommended_channel = {
+            "channel_id": channel_id,
+            "channel_name": df_recommended_channel["channel_name"][0],
+            "home_url": df_recommended_channel["home_url"][0],
+            "thumbnail_url": df_recommended_channel["thumbnail_url"][0]
+        }
+    return recommended_channel
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
