@@ -1,0 +1,30 @@
+name: deploy
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # hub コマンドをインストールする
+      - name: install hub
+        uses: geertvdc/setup-hub@v1.0.0
+
+      # dev ブランチをチェックアウトする
+      - name: checkout develop
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      # プルリクを作成する
+      - name: Create Pull Request
+        env:
+          TZ: 'Asia/Tokyo'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DATE=`date +"%Y%m%d_%H:%M:%S"`
+          PULL_REQUEST_NAME="release_$DATE"
+          hub pull-request -m "$PULL_REQUEST_NAME" -b master -h develop
