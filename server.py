@@ -11,15 +11,21 @@ def post():
         response = requests.get(url)
         return response
 
-@app.route(f'/personalized_pagerank/<ch_id>', methods=['GET'])
-def personalized_pagerank(ch_id=None):
+@app.route("/personalized_pagerank", methods=["POST"])
+def personalized_pagerank():
     """
-    現段階では本当のページランクではなく、推薦するチャンネルのIDが保存されたjsonを返す。
-    チャンネルIDは以下のようにURLに含まれる
-    youtube.com/user/チャンネルID  (チャンネルのホームページのURL)
+    現段階では本当のページランクではなく、推薦するチャンネル情報が書き込まれたjsonを返す。
+    チャンネル情報
+      channel: channel_name (文字配列), 
+      チャンネルホームURL: home_url (文字配列)
     """
-    ids_of_recommended_channel = {"ch_id": ["jpspygea", "YamatoNjp", "Poulmt", "vodkaplaysful"]}
-    return jsonify(ids_of_recommended_channel)
+    if request.method == "POST":
+        ch_name = request.form["channel_name"]
+        info_of_recommended_channel = {
+                "channel_id1": ["SPYGEA", "https://www.youtube.com/user/jpspygea"],
+                "channel_id2": ["YamatoN", "https://www.youtube.com/user/jpspygea"],
+            }
+        return jsonify(info_of_recommended_channel)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
