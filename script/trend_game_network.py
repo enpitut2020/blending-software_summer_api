@@ -1,4 +1,3 @@
-
 import os
 import csv
 from apiclient.discovery import build
@@ -35,8 +34,6 @@ def get_related_videos(channelId_set, res, edge_list, dep=1, m=5, first_flag=Tru
         # depが１より大きければ再帰処理
         if(dep > 1):
             edge_list.extend(get_related_videos(channelId_set, search_response, edge_list, dep=dep - 1, first_flag=False))
-
-        print(edge_list)
 
     return edge_list
 
