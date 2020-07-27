@@ -4,14 +4,6 @@ import pandas as pd
 from apiclient.discovery import build
 
 def write_channel_info(youtube, channelId_set, path):
-    # channelIds_str = ",".join(map(str, channelId_set))
-    # channelId_list = list(channelId_set)
-    # channels = youtube.channels().list(
-    #         part='snippet,statistics',
-    #         # id=channelIds_str
-    #         id=channelId_list
-    #         ).execute()
-
     with open(path,'w') as f:
         writer = csv.writer(f)
         writer.writerow([
@@ -46,12 +38,6 @@ def write_channel_info(youtube, channelId_set, path):
                     channel['statistics']['subscriberCount'],
                     channel['statistics']['videoCount'],
                     ])
-
-    # 重複削除
-    # if writing_type == 'a':
-    #     df = pd.read_csv("data/database.csv")
-    #     df.drop_duplicates(inplace=True)
-    #     df.to_csv(path)
 
 def get_channelIds(path):
     channelIds = set()
