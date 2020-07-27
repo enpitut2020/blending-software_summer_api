@@ -21,7 +21,7 @@ def personalized_pagerank(ch_id=None):
 @app.route("/recommended_channels", methods=["POST"])
 def recommended_channels():
     """
-    現段階では本当のページランクではなく、推薦するチャンネル情報が書き込まれたjsonを返す。
+    推薦するチャンネル情報が書き込まれたjsonを返す。
     """
     if request.method == "POST":
         ch_name = request.form["channel_name"]
