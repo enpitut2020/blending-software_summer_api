@@ -52,7 +52,7 @@ if __name__ == '__main__':
         channelId_set.add(item['snippet']['channelId'])
 
     # 関連動画取得
-    edge_list = get_related_videos(search_response, edge_list, m=10, dep=2)
+    edge_list = get_related_videos(channelId_set,popular_videos, edge_list, m=10, dep=2)
 
     # 重複削除
     edge_list = list(map(list, set(map(tuple, edge_list))))
