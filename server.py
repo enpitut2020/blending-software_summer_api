@@ -49,7 +49,7 @@ def channel_name2channel_id(channel_name):
     return channel_id
 
 def get_recommended_channel(channel_id):
-    df = pd.read_csv("database.csv")
+    df = pd.read_csv("data/database.csv")
     print(channel_id)
     df_recommended_channel = df[df["channel_id"]==channel_id]
     recommended_channel = {
