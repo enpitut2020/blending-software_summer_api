@@ -26,19 +26,26 @@ def recommended_channels():
     if request.method == "POST":
         ch_name = request.form["channel_name"]
         ch_id = channel_name2channel_id(ch_name)
-        ids_of_recommended_channel = personalized_pagerank(ch_id)
-        infos_of_recommended_channel = []
-        for id in ids_of_recommended_channel:
-            info_of_recommended_channel = get_recommended_channel(id)
-            infos_of_recommended_channel.append(info_of_recommended_channel)
-
-        response = {"ans": infos_of_recommended_channel}
+        if ch_id:
+            ids_of_recommended_channel = personalized_pagerank(ch_id)
+            infos_of_recommended_channel = []
+            for id in ids_of_recommended_channel:
+                info_of_recommended_channel = get_recommended_channel(id)
+                infos_of_recommended_channel.append(info_of_recommended_channel)
+            response = {"ans": infos_of_recommended_channel}
+        else:
+            # POSTで送られたきたチャンネル名がdatabase.csvに登録されていなかった場合
+            response = {"ans": []}
+            
         return jsonify(response)
 
 def channel_name2channel_id(channel_name):
     df = pd.read_csv("data/database.csv")
-    channel_id = df[df["channel_name"]==channel_name]["channel_id"].values[0]
-    return channel_id
+    channel_id = df[df["channel_name"]==channel_name]["channel_id"]
+    if len(channel_id) == 0:
+        return None
+    else:
+        return channel_id.values[0] # channel_id自体は1つだがSeriesになっているので要素を取り出す
 
 def get_recommended_channel(channel_id):
     df = pd.read_csv("data/database.csv")
