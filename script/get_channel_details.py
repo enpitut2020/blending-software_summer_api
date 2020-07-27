@@ -28,7 +28,7 @@ def write_channel_info(youtube, channelId_set, path):
             for channel in channels['items']:
                 writer.writerow([
                     channel["id"],
-                    channel['snippet']['title'],
+                    repr(channel['snippet']['title']),
                     repr(channel['snippet']['description']),
                     "https://www.youtube.com/channel/" + channel['id'],
                     channel['snippet']['thumbnails']['default']['url'],
