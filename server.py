@@ -36,7 +36,7 @@ def recommended_channels():
         ch_id = channel_name2channel_id(ch_name)
         ids_of_recommended_channel = personalized_pagerank(ch_id)
         infos_of_recommended_channel = []
-        for id in ds_of_recommended_channel:
+        for id in ids_of_recommended_channel:
             info_of_recommended_channel = get_recommended_channel(id)
             infos_of_recommended_channel.append(info_of_recommended_channel)
 
@@ -45,7 +45,9 @@ def recommended_channels():
 
 def channel_name2channel_id(channel_name):
     df = pd.read_csv("data/database.csv")
-    channel_id = df[df["channel_name"]==channel_name]["channel_id"][0]
+    #print(df)
+    print(df[df["channel_name"]==channel_name]["channel_id"])
+    channel_id = df[df["channel_name"]==channel_name]["channel_id"].values[0]
     return channel_id
 
 def get_recommended_channel(channel_id):
@@ -54,9 +56,9 @@ def get_recommended_channel(channel_id):
     df_recommended_channel = df[df["channel_id"]==channel_id]
     recommended_channel = {
             "channel_id": channel_id,
-            "channel_name": df_recommended_channel["channel_name"][0],
-            "home_url": df_recommended_channel["home_url"][0],
-            "thumbnail_url": df_recommended_channel["thumbnail_url"][0]
+            "channel_name": df_recommended_channel["channel_name"].values[0],
+            "home_url": df_recommended_channel["home_url"].values[0],
+            "thumbnail_url": df_recommended_channel["thumbnail_url"].values[0]
         }
     return recommended_channel
 
