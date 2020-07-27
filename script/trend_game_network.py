@@ -40,10 +40,7 @@ def get_related_videos(youtube, channelId_set, res, edge_list, dep=1, m=5, first
 
 
 def write_channel_info(youtube, channelId_set, path, writing_type):
-    channelIds_str = ','.join(map(str, channelId_set))
-    print(channelIds_str)
-    print(len(channelIds_str))
-
+    channelIds_str = ",".join(map(str, channelId_set))
     channels = youtube.channels().list(
             part='snippet',
             id=channelIds_str
@@ -82,7 +79,7 @@ if __name__ == '__main__':
         channelId_set.add(item['snippet']['channelId'])
 
     # 関連動画取得
-    edge_list = get_related_videos(youtube, channelId_set,popular_videos, edge_list, m=3, dep=2)
+    edge_list = get_related_videos(youtube, channelId_set,popular_videos, edge_list, m=5, dep=2)
 
     # 重複削除
     edge_list = list(map(list, set(map(tuple, edge_list))))
