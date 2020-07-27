@@ -5,14 +5,6 @@ import networkx as nx
 
 app = Flask(__name__)
 
-@app.route('/post', methods=['GET', 'POST'])
-def post():
-    if request.method == 'POST':
-        ch_id = request.form['ch_id']
-        url = f'http://localhost:5000/personalized_pagerank/{ch_id}'
-        response = requests.get(url)
-        return response
-
 def personalized_pagerank(ch_id=None):
     if ch_id == None:
         return False
@@ -45,14 +37,11 @@ def recommended_channels():
 
 def channel_name2channel_id(channel_name):
     df = pd.read_csv("data/database.csv")
-    #print(df)
-    print(df[df["channel_name"]==channel_name]["channel_id"])
     channel_id = df[df["channel_name"]==channel_name]["channel_id"].values[0]
     return channel_id
 
 def get_recommended_channel(channel_id):
     df = pd.read_csv("data/database.csv")
-    print(channel_id)
     df_recommended_channel = df[df["channel_id"]==channel_id]
     recommended_channel = {
             "channel_id": channel_id,
