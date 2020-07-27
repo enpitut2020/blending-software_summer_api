@@ -5,14 +5,6 @@ import networkx as nx
 
 app = Flask(__name__)
 
-@app.route('/post', methods=['GET', 'POST'])
-def post():
-    if request.method == 'POST':
-        ch_id = request.form['ch_id']
-        url = f'http://localhost:5000/personalized_pagerank/{ch_id}'
-        response = requests.get(url)
-        return response
-
 def personalized_pagerank(ch_id=None):
     if ch_id == None:
         return False
@@ -29,30 +21,34 @@ def personalized_pagerank(ch_id=None):
 @app.route("/recommended_channels", methods=["POST"])
 def recommended_channels():
     """
-    現段階では本当のページランクではなく、推薦するチャンネル情報が書き込まれたjsonを返す。
+    推薦するチャンネル情報が書き込まれたjsonを返す。
     """
     if request.method == "POST":
         ch_name = request.form["channel_name"]
         ch_id = channel_name2channel_id(ch_name)
-        ids_of_recommended_channel = personalized_pagerank(ch_id)
-        infos_of_recommended_channel = []
-        for id in ids_of_recommended_channel:
-            info_of_recommended_channel = get_recommended_channel(id)
-            infos_of_recommended_channel.append(info_of_recommended_channel)
-
-        response = {"ans": infos_of_recommended_channel}
+        if ch_id:
+            ids_of_recommended_channel = personalized_pagerank(ch_id)
+            infos_of_recommended_channel = []
+            for id in ids_of_recommended_channel:
+                info_of_recommended_channel = get_recommended_channel(id)
+                infos_of_recommended_channel.append(info_of_recommended_channel)
+            response = {"ans": infos_of_recommended_channel}
+        else:
+            # POSTで送られたきたチャンネル名がdatabase.csvに登録されていなかった場合
+            response = {"ans": []}
+            
         return jsonify(response)
 
 def channel_name2channel_id(channel_name):
     df = pd.read_csv("data/database.csv")
-    #print(df)
-    print(df[df["channel_name"]==channel_name]["channel_id"])
-    channel_id = df[df["channel_name"]==channel_name]["channel_id"].values[0]
-    return channel_id
+    channel_id = df[df["channel_name"]==channel_name]["channel_id"]
+    if len(channel_id) == 0:
+        return None
+    else:
+        return channel_id.values[0] # channel_id自体は1つだがSeriesになっているので要素を取り出す
 
 def get_recommended_channel(channel_id):
     df = pd.read_csv("data/database.csv")
-    print(channel_id)
     df_recommended_channel = df[df["channel_id"]==channel_id]
     recommended_channel = {
             "channel_id": channel_id,
