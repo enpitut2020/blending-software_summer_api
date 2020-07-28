@@ -15,7 +15,7 @@ def get_popular_videos_by_ch_id(youtube, ch_id):
     playlist_items = youtube.playlistItems().list(
         part='contentDetails',
         playlistId=channel["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"],
-        maxResults=3
+        maxResults=10
     ).execute()
 
     videos = {"items": []}
@@ -34,7 +34,7 @@ def add_network(youtube, ch_id):
     edge_list = []
     channelId_set = set()
     channelId_set.add(ch_id)
-    edge_list = get_related_videos(youtube, channelId_set, popular_video, edge_list, m=2, dep=2)
+    edge_list = get_related_videos(youtube, channelId_set, popular_video, edge_list, m=3, dep=1)
 
     # 重複削除
     edge_list = list(map(list, set(map(tuple, edge_list))))
