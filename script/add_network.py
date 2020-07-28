@@ -7,7 +7,6 @@ from apiclient.discovery import build
 
 
 def get_popular_videos_by_ch_id(youtube, ch_id):
-
     channel = youtube.channels().list(
         part='contentDetails',
         id=ch_id
@@ -19,10 +18,11 @@ def get_popular_videos_by_ch_id(youtube, ch_id):
         maxResults=3
     ).execute()
 
-    videos = {}
-    videos["items"] = [{"id": playlist_items["items"][0]["contentDetails"]["videoId"],
-                       "snippet": {"channelId": ch_id}
-                       }]
+    videos = {"items": []}
+    for item in playlist_items["items"]:
+        print(item)
+        videos["items"].append({"id": item["contentDetails"]["videoId"], "snippet": {"channelId": ch_id}})
+
     return videos
 
 
@@ -34,7 +34,7 @@ def add_network(youtube, ch_id):
     edge_list = []
     channelId_set = set()
     channelId_set.add(ch_id)
-    edge_list = get_related_videos(youtube, channelId_set, popular_video, edge_list, m=2, dep=3)
+    edge_list = get_related_videos(youtube, channelId_set, popular_video, edge_list, m=2, dep=2)
 
     # 重複削除
     edge_list = list(map(list, set(map(tuple, edge_list))))
