@@ -35,8 +35,8 @@ def recommended_channels():
             for id in ids_of_recommended_channel:
                 info_of_recommended_channel = get_channel_info(id)
                 infos_of_recommended_channel.append(info_of_recommended_channel)
-            channel_used_for_search = get_channel_info(ch_id)["channel_name"]
-            response = {"ans": infos_of_recommended_channel, "channel_name_used_for_search": channel_used_for_search}
+            channel_info_used_for_search = get_channel_info(ch_id)
+            response = {"ans": infos_of_recommended_channel, "channel_info_used_for_search": channel_info_used_for_search}
         else:
             # POSTで送られたきたチャンネル名がdatabase.csvに登録されていなかった場合
             response = {"ans": []}
