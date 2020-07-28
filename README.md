@@ -14,9 +14,20 @@ POST /recommended_channels
 |  channel_name  | string | おすすめのチャンネルが知りたいチャンネル名 |
 
 
+
+## 配信者の関係を表すネットワークのエッジ情報の取得
+```
+GET /network_edge_data
+```
+
 ## テスト用コマンド
+### おすすめチャンネルの取得
 ```
 curl -X POST -F 'channel_name=兄者弟者' https://youtuber-search-api.herokuapp.com/recommended_channels
+```
+### エッジ情報の取得
+```
+curl -X GET https://youtuber-search-api.herokuapp.com/network_edge_data
 ```
 
 ### Database
