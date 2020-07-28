@@ -76,6 +76,7 @@ def get_channel_info(channel_id):
     recommended_channel = {
             "channel_id": channel_id,
             "channel_name": df_channel_info["channel_name"].values[0],
+            "channel_description": df_channel_info["channel_description"].values[0],
             "home_url": df_channel_info["home_url"].values[0],
             "thumbnail_url": df_channel_info["thumbnail_url"].values[0],
             "m_thumbnail_url": df_channel_info["m_thumbnail_url"].values[0],
