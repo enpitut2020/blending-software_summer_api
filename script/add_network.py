@@ -34,7 +34,7 @@ def add_network(youtube, ch_id):
     edge_list = []
     channelId_set = set()
     channelId_set.add(ch_id)
-    edge_list = get_related_videos(youtube, channelId_set, popular_video, edge_list, m=3, dep=1)
+    edge_list = get_related_videos(youtube, channelId_set, popular_video, edge_list, m=5, dep=1)
 
     # 重複削除
     edge_list = list(map(list, set(map(tuple, edge_list))))
