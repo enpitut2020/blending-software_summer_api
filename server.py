@@ -36,7 +36,7 @@ def recommended_channels():
         else:
             # POSTで送られたきたチャンネル名がdatabase.csvに登録されていなかった場合
             response = {"ans": []}
-            
+
         return jsonify(response)
 
 @app.route("/recommended_channels")
@@ -61,7 +61,7 @@ def network_edge_data():
 
 def channel_name2channel_id(channel_name):
     df = pd.read_csv("data/database.csv")
-    channel_id = df[df["channel_name"]==channel_name]["channel_id"]
+    channel_id = df[df['channel_name'].str.contains(channel_name)].sort_values('subscriberCount', ascending=False)[0:1]['channel_id']
     if len(channel_id) == 0:
         return None
     else:
