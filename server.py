@@ -30,16 +30,17 @@ def recommended_channels():
             ids_of_recommended_channel = personalized_pagerank(ch_id)
             infos_of_recommended_channel = []
             for id in ids_of_recommended_channel:
-                info_of_recommended_channel = get_recommended_channel(id)
+                info_of_recommended_channel = get_channel_info(id)
                 infos_of_recommended_channel.append(info_of_recommended_channel)
-            response = {"ans": infos_of_recommended_channel}
+            channel_used_for_search = get_channel_info(ch_id)["channel_name"]
+            response = {"ans": infos_of_recommended_channel, "channel_name_used_for_search": channel_used_for_search}
         else:
             # POSTで送られたきたチャンネル名がdatabase.csvに登録されていなかった場合
             response = {"ans": []}
 
         return jsonify(response)
 
-@app.route("/recommended_channels")
+@app.route("/network_edge_data", methods=["GET"])
 def network_edge_data():
     with open("data/edge_list.txt", "r") as f:
         text_edge_data = f.read()
@@ -50,8 +51,8 @@ def network_edge_data():
         edge_of_channel = []
         for e in edge_of_ch_id:
             edge = []
-            node1 = get_recommended_channel(e[0])
-            node2 = get_recommended_channel(e[1])
+            node1 = get_channel_info(e[0])
+            node2 = get_channel_info(e[1])
             if node1 and node2:
                 edge.append(node1)
                 edge.append(node2)
@@ -67,16 +68,21 @@ def channel_name2channel_id(channel_name):
     else:
         return channel_id.values[0] # channel_id自体は1つだがSeriesになっているので要素を取り出す
 
-def get_recommended_channel(channel_id):
+def get_channel_info(channel_id):
     df = pd.read_csv("data/database.csv")
-    df_recommended_channel = df[df["channel_id"]==channel_id]
-    if len(df_recommended_channel) == 0:
+    df_channel_info = df[df["channel_id"]==channel_id]
+    if len(df_channel_info) == 0:
         return None
     recommended_channel = {
             "channel_id": channel_id,
-            "channel_name": df_recommended_channel["channel_name"].values[0],
-            "home_url": df_recommended_channel["home_url"].values[0],
-            "thumbnail_url": df_recommended_channel["thumbnail_url"].values[0]
+            "channel_name": df_channel_info["channel_name"].values[0],
+            "home_url": df_channel_info["home_url"].values[0],
+            "thumbnail_url": df_channel_info["thumbnail_url"].values[0],
+            "m_thumbnail_url": df_channel_info["m_thumbnail_url"].values[0],
+            "h_thumbnail_url": df_channel_info["h_thumbnail_url"].values[0],
+            "viewCount": str(df_channel_info["viewCount"].values[0]),
+            "subscriberCount": str(df_channel_info["subscriberCount"].values[0]),
+            "videoCount": str(df_channel_info["videoCount"].values[0]),
         }
     return recommended_channel
 
