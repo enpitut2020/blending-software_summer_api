@@ -47,7 +47,6 @@ def network_edge_data():
         text_edge_data = text_edge_data.replace(" ", "").split("\n")
         edge_of_ch_id = [edge.split(",") for edge in text_edge_data if not edge == ""]
 
-        # チャンネル名とチャンネルIDが紐付けられないデータがあるので確認
         edge_of_channel = []
         for e in edge_of_ch_id:
             edge = []
