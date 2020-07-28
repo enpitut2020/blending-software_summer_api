@@ -3,13 +3,16 @@ import pandas as pd
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import networkx as nx
 
+DATABASE_PATH = "data/database.csv"
+EDGEDATA_PATH = "data/edge_list.txt"
+
 app = Flask(__name__)
 
 def personalized_pagerank(ch_id=None):
     if ch_id == None:
         return False
     # グラフ作成
-    G = nx.read_edgelist("data/edge_list.txt", delimiter=' , ')
+    G = nx.read_edgelist(EDGEDATA_PATH, delimiter=' , ')
     # pagerank計算
     pr = nx.pagerank(G, personalization={ch_id: 1})
     # 自分は除外
@@ -42,7 +45,7 @@ def recommended_channels():
 
 @app.route("/network_edge_data", methods=["GET"])
 def network_edge_data():
-    with open("data/edge_list.txt", "r") as f:
+    with open(EDGEDATA_PATH, "r") as f:
         text_edge_data = f.read()
         text_edge_data = text_edge_data.replace(" ", "").split("\n")
         edge_of_ch_id = [edge.split(",") for edge in text_edge_data if not edge == ""]
@@ -60,7 +63,7 @@ def network_edge_data():
         return jsonify({"edge": edge_of_channel})
 
 def channel_name2channel_id(channel_name):
-    df = pd.read_csv("data/database.csv")
+    df = pd.read_csv(DATABASE_PATH)
     channel_id = df[df['channel_name'].str.contains(channel_name, case=False)].sort_values('subscriberCount', ascending=False)[0:1]['channel_id']
     if len(channel_id) == 0:
         return None
@@ -68,7 +71,7 @@ def channel_name2channel_id(channel_name):
         return channel_id.values[0] # channel_id自体は1つだがSeriesになっているので要素を取り出す
 
 def get_channel_info(channel_id):
-    df = pd.read_csv("data/database.csv")
+    df = pd.read_csv(DATABASE_PATH)
     df_channel_info = df[df["channel_id"]==channel_id]
     if len(df_channel_info) == 0:
         return None
