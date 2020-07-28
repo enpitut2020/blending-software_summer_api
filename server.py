@@ -39,6 +39,26 @@ def recommended_channels():
             
         return jsonify(response)
 
+@app.route("/recommended_channels")
+def network_edge_data():
+    with open("data/edge_list.txt", "r") as f:
+        text_edge_data = f.read()
+        text_edge_data = text_edge_data.replace(" ", "").split("\n")
+        edge_of_ch_id = [edge.split(",") for edge in text_edge_data if not edge == ""]
+
+        # チャンネル名とチャンネルIDが紐付けられないデータがあるので確認
+        edge_of_channel = []
+        for e in edge_of_ch_id:
+            edge = []
+            node1 = get_recommended_channel(e[0])
+            node2 = get_recommended_channel(e[1])
+            if node1 and node2:
+                edge.append(node1)
+                edge.append(node2)
+                edge_of_channel.append(edge)
+
+        return jsonify({"edge": edge_of_channel})
+
 def channel_name2channel_id(channel_name):
     df = pd.read_csv("data/database.csv")
     channel_id = df[df["channel_name"]==channel_name]["channel_id"]
@@ -50,6 +70,8 @@ def channel_name2channel_id(channel_name):
 def get_recommended_channel(channel_id):
     df = pd.read_csv("data/database.csv")
     df_recommended_channel = df[df["channel_id"]==channel_id]
+    if len(df_recommended_channel) == 0:
+        return None
     recommended_channel = {
             "channel_id": channel_id,
             "channel_name": df_recommended_channel["channel_name"].values[0],
