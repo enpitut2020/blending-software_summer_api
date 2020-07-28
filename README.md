@@ -13,8 +13,13 @@ POST /recommended_channels
 | ---- | ---- | ---- |
 |  channel_name  | string | おすすめのチャンネルが知りたいチャンネル名 |
 
+
 ## テスト用コマンド
 ```
 curl -X POST -F 'channel_name=兄者弟者' https://youtuber-search-api.herokuapp.com/recommended_channels
 ```
 
+### Database
+| channel_id | channel_name | channel_description | home_url | thumbnail_url | m_thumbnail_url | h_thumbnail_url | viewCount | subscriberCount | videoCount |
+| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+| チャンネルのid | チャンネル名 | チャンネル説明 | チャンネルのURL | サムネイルURL | サムネイルURL(中画質) | サムネイルURL(高画質) | 総視聴回数 | チャンネル登録者数 | ビデオ数 |
