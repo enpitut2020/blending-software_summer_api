@@ -39,7 +39,7 @@ def recommended_channels():
 
         return jsonify(response)
 
-@app.route("/recommended_channels")
+@app.route("/network_edge_data", methods=["GET"])
 def network_edge_data():
     with open("data/edge_list.txt", "r") as f:
         text_edge_data = f.read()
