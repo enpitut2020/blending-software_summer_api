@@ -51,10 +51,17 @@ def network_edge_data():
         edge_of_ch_id = [edge.split(",") for edge in text_edge_data if not edge == ""]
 
         edge_of_channel = []
+        duplication_check_list = []
         for e in edge_of_ch_id:
             edge = []
             node1 = get_channel_info(e[0])
             node2 = get_channel_info(e[1])
+            check_edge = sorted([node1["channel_name"], node2["channel_name"]])
+            # 重複しているエッジを排除
+            if check_edge in duplication_check_list:
+                continue
+            else:
+                duplication_check_list.append(check_edge)  
             if node1 and node2:
                 edge.append(node1)
                 edge.append(node2)
