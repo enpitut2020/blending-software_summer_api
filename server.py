@@ -73,7 +73,7 @@ def get_channel_info(channel_id):
     df_channel_info = df[df["channel_id"]==channel_id]
     if len(df_channel_info) == 0:
         return None
-    recommended_channel = {
+    channel_info = {
             "channel_id": channel_id,
             "channel_name": df_channel_info["channel_name"].values[0],
             "channel_description": df_channel_info["channel_description"].values[0],
@@ -85,7 +85,7 @@ def get_channel_info(channel_id):
             "subscriberCount": str(df_channel_info["subscriberCount"].values[0]),
             "videoCount": str(df_channel_info["videoCount"].values[0]),
         }
-    return recommended_channel
+    return channel_info
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
